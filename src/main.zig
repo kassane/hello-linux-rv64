@@ -5,6 +5,8 @@ const stdoutFile = std.io.getStdOut();
 const stdout = std.io.getStdOut().writer();
 
 pub fn main() !void {
+    try stdout.print("\nZig Info:\n\nVersion: {}\nStage: {}\n", .{ builtin.zig_backend, builtin.zig_version });
+
     // .riscv32 - don't work:
     // https://github.com/ziglang/zig/blob/c955379504d4866f9c474c50317b2a0da18ee631/lib/std/os/linux.zig#L35-L44
     const arch = switch (builtin.cpu.arch) {
@@ -52,5 +54,5 @@ pub fn main() !void {
     try stdoutFile.writeFileAll(cmdline, .{});
 
     const uname = try std.ChildProcess.exec(.{ .allocator = allocator, .argv = &[_][]const u8{ "uname", "-a" } });
-    try stdout.print("kernel:\n{s}", .{uname.stdout});
+    try stdout.print("\nkernel:\n{s}", .{uname.stdout});
 }
