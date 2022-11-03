@@ -5,19 +5,19 @@ const stdoutFile = std.io.getStdOut();
 const stdout = std.io.getStdOut().writer();
 
 pub fn main() !void {
-    try stdout.print("\nZig Info:\n\nVersion: {}\nStage: {}\n", .{ builtin.zig_backend, builtin.zig_version });
+    try stdout.print("\nZig Info:\n\nVersion: {}\nStage: {s}\n", .{ builtin.zig_version, @tagName(builtin.zig_backend) });
 
     // .riscv32 - don't work:
     // https://github.com/ziglang/zig/blob/c955379504d4866f9c474c50317b2a0da18ee631/lib/std/os/linux.zig#L35-L44
     const arch = switch (builtin.cpu.arch) {
-        .i386 => "x86",
+        .x86 => "x86",
         .x86_64 => "x86_64",
         .aarch64 => "ARM64",
         .riscv64 => "RISC-V",
         .mipsel, .mips => "MIPS",
         else => @compileError("Unsupported CPU Architecture"),
     };
-    try stdout.print("\nLet's have a look at your shiny {s} system! :)\n\n", .{arch});
+    try stdout.print("\nLet's have a look at your shiny {s} - {s} system! :)\n\n", .{arch, builtin.cpu.model.name});
 
     // Read HW linux info
 

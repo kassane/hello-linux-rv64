@@ -26,16 +26,19 @@ cargo zigbuild --release
 You will need [Zig](https://ziglang.org/)
 
 ```sh
-# zig version v0.10 or higher (default self-hosting compiler [stage2 or stage3]) 
-zig build -Drelease-safe|-Drelease-fast|-Drelease-small -Dtarget=arch-os-libc
+# zig version v0.11 or higher (default self-hosting compiler [stage3]) 
+zig build -Doptimize=<mode> -Dtarget=arch-os-libc
+# mode = ReleaseSafe|ReleaseFast|ReleaseSmall
 
 # specific target
-zig build -Drelease-safe|-Drelease-fast|-Drelease-small -Dtarget=riscv64-linux-musl -Dcpu=baseline_rv64+v # Allwinner D1
+zig build -Doptimize=<mode> -Dtarget=riscv64-linux -Dcpu=baseline_rv64+v # Allwinner D1
 
 # more features RISC-V: https://github.com/lupyuen/zig-bl602-nuttx/issues/1
 
-# execute
-zig build run
+# Execute (after builded)
+./zig-out/bin/hello-zig
+# or run directly (default: host target) 
+zig build run -Doptimize=<mode> -Dtarget=riscv64-linux
 
 # all targets
 zig targets | jq .libc

@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: goto-bus-stop/setup-zig@v1
+      - uses: goto-bus-stop/setup-zig@v2
         with:
           version: master
       - uses: actions-rs/toolchain@v1
@@ -15,13 +15,29 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: build
-        run: echo -e "Rust build test" && cargo run --release && echo -e "Zig build test:" && zig build run -Drelease-safe
+      - name: Install features
+        run: |
+              sudo apt update && sudo apt install -y \
+              qemu-user-binfmt gcc-riscv64-linux-gnu \
+              && rustup target add riscv64gc-unknown-linux-gnu
+      
+      - name: build RISC-V64
+        run: |
+              echo -e "Rust build GNU test" \
+              && cargo run --release --target riscv64gc-unknown-linux-gnu \
+              && echo -e "Zig build Musl test" \
+              && zig build run -Doptimize=ReleaseSafe -Dtarget=riscv64-linux-musl
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: goto-bus-stop/setup-zig@v1
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - uses: goto-bus-stop/setup-zig@v2
         with:
           version: master
-      - run: rm -fr zig-cache && cargo fmt -- --check && zig fmt --check --ast-check */*.zig
+      - run: |
+              cargo fmt --check --all \
+              && zig fmt --check --ast-check **.zig
