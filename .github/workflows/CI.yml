@@ -1,15 +1,13 @@
-name: CI
+name: CI Build
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: master
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable

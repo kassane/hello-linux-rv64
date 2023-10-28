@@ -17,7 +17,7 @@ pub fn main() !void {
         .mipsel, .mips => "MIPS",
         else => @compileError("Unsupported CPU Architecture"),
     };
-    try stdout.print("\nLet's have a look at your shiny {s} - {s} system! :)\n\n", .{arch, builtin.cpu.model.name});
+    try stdout.print("\nLet's have a look at your shiny {s} - {s} system! :)\n\n", .{ arch, builtin.cpu.model.name });
 
     // Read HW linux info
 
@@ -53,6 +53,6 @@ pub fn main() !void {
     try stdout.print("cmdline:\n", .{});
     try stdoutFile.writeFileAll(cmdline, .{});
 
-    const uname = try std.ChildProcess.exec(.{ .allocator = allocator, .argv = &[_][]const u8{ "uname", "-a" } });
+    const uname = try std.ChildProcess.run(.{ .allocator = allocator, .argv = &[_][]const u8{ "uname", "-a" } });
     try stdout.print("\nkernel:\n{s}", .{uname.stdout});
 }
