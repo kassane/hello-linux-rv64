@@ -7,7 +7,7 @@ fn main() {
     let arch = "x86";
     #[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
     let arch = "ARM";
-    #[cfg(any(target_arch = "mips", target_arch = "mipsle"))]
+    #[cfg(any(target_arch = "mips", target_arch = "mips64"))]
     let arch = "MIPS";
     #[cfg(any(target_arch = "riscv64", target_arch = "riscv32"))]
     let arch = "RISC-V";

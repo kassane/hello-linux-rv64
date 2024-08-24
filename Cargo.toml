@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 riscv = "0.10.1"
-rustix = { version = "0.38", features = ["system"] }
+rustix = { version = "0.38.34", features = ["system"] }
