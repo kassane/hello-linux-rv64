@@ -41,7 +41,7 @@ pub fn main() !void {
 
     try stdout.print("meminfo:\n", .{});
     while (true) {
-        var line = try stream_in.readUntilDelimiterAlloc(allocator, '\n', 2048);
+        const line = try stream_in.readUntilDelimiterAlloc(allocator, '\n', 2048);
         errdefer allocator.free(line);
         try stdout.print("{s}\n", .{line});
         if (std.mem.startsWith(u8, line, "MemAvailable:")) break;
@@ -53,6 +53,12 @@ pub fn main() !void {
     try stdout.print("cmdline:\n", .{});
     try stdoutFile.writeFileAll(cmdline, .{});
 
-    const uname = try std.ChildProcess.run(.{ .allocator = allocator, .argv = &[_][]const u8{ "uname", "-a" } });
+    const uname = try std.process.Child.run(.{
+        .allocator = allocator,
+        .argv = &.{
+            "uname",
+            "-a",
+        },
+    });
     try stdout.print("\nkernel:\n{s}", .{uname.stdout});
 }
